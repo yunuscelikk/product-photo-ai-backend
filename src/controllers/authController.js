@@ -50,3 +50,40 @@ exports.register = async (req,res) => {
     }
 };
 
+exports.login = async (req,res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({error: 'Email and password required'});
+        }
+
+        const user = await User.findOne({where: {email}});
+        if (!user) {
+            return res.status(401).json({error: 'Invalid email or password'});
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({error: 'Invalid email or password'});
+        }
+
+        const token = generateToken(user.id);
+
+        res.json({
+            success: true,
+            data: {
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    subscriptionType: user.subscriptionType,
+                    dailyQuota: user.dailyQuota
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Login error', error);
+        res.status(500).json({error: 'Login failed'});
+    }
+};
