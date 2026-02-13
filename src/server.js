@@ -4,6 +4,7 @@ const helmet = require('helmet');
 require("dotenv").config();
 const { sequelize } = require('./models');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use('/api/auth', authRoutes)
+app.use('/api/user', userRoutes);
 
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -23,6 +25,7 @@ app.get("/health", (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
+
 async function startServer() {
   try {
     await sequelize.authenticate();
