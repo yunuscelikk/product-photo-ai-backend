@@ -1,10 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require('helmet');
-require("dotenv").config();
 const { sequelize } = require('./models');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const imageRoutes= require('./routes/images');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes);
+app.use('/api/images', imageRoutes);
 
 app.get("/health", (req, res) => {
   res.status(200).json({
