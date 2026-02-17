@@ -6,6 +6,13 @@ const quota = require('../middlewares/quota');
 const upload = require('../middlewares/upload');
 
 router.post('/upload', auth, quota, upload.single('image'), imageController.uploadImage);
+
+router.post('/:imageId/process', auth, quota, imageController.processImage);
+
+router.get('/:imageId/status', auth, imageController.getImageStatus);
+
 router.get('/', auth, imageController.listImages);
+
+router.delete('/:imageId', auth, imageController.deleteImage);
 
 module.exports = router;
